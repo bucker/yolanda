@@ -2,12 +2,12 @@
 
 void read_data(int sockfd) {
     ssize_t n;
-    char buf[1024];
+    char buf[65536];
 
     int time = 0;
     for (;;) {
         fprintf(stdout, "block in read\n");
-        if ((n = readn(sockfd, buf, 1024)) == 0)
+        if ((n = readn(sockfd, buf, 65536)) == 0)
             return;
 
         time++;
@@ -15,7 +15,6 @@ void read_data(int sockfd) {
         usleep(1000);
     }
 }
-
 
 int main(int argc, char **argv) {
     int listenfd, connfd;
@@ -30,8 +29,10 @@ int main(int argc, char **argv) {
     servaddr.sin_port = htons(12345);
 
     /* bind到本地地址，端口为12345 */
+    fprintf(stdout, "Bind to port: 12345 \n");
     bind(listenfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
     /* listen的backlog为1024 */
+    fprintf(stdout, "Listening...\n");
     listen(listenfd, 1024);
 
     /* 循环处理用户请求 */
@@ -42,4 +43,3 @@ int main(int argc, char **argv) {
         close(connfd);          /* 关闭连接套接字，注意不是监听套接字*/
     }
 }
-
