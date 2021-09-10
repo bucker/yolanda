@@ -1,6 +1,7 @@
 #include "lib/common.h"
 #include "message_objecte.h"
 
+// Simulate the Keep-Alive in application layer
 #define    MAXLINE     4096
 #define    KEEP_ALIVE_TIME  10
 #define    KEEP_ALIVE_INTERVAL  3
@@ -12,15 +13,18 @@ int main(int argc, char **argv) {
         error(1, 0, "usage: tcpclient <IPaddress>");
     }
 
+    // create TCP socket
     int socket_fd;
     socket_fd = socket(AF_INET, SOCK_STREAM, 0);
 
+    // Set IPv4 address and port 
     struct sockaddr_in server_addr;
     bzero(&server_addr, sizeof(server_addr));
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(SERV_PORT);
     inet_pton(AF_INET, argv[1], &server_addr.sin_addr);
 
+    // connect to server
     socklen_t server_len = sizeof(server_addr);
     int connect_rt = connect(socket_fd, (struct sockaddr *) &server_addr, server_len);
     if (connect_rt < 0) {
